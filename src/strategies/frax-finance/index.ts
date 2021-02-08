@@ -78,22 +78,26 @@ export async function strategy(
       // Get total supply of 1inch LP OPIUM-ETH
       // [options.LP_1INCH_OPIUM_ETH, 'totalSupply'],
       ...fxsQuery,
-      // ...farmingUniLPFraxFxsQuery,
+      ...farmingUniLPFraxFxsQuery,
 
     ],
     { blockTag }
   );
 
 
+  
+
   // const opiumLp1inchOpiumEth = response[0];
   // const opiumLp1inchOpiumEthTotalSupply = response[1];
   // const responseClean = response.slice(2, response.length);
 
+  console.log(response)
+
   const responseClean = response.slice(0, response.length);
 
   const chunks = chunk(responseClean, addresses.length);
-  const opiumBalances = chunks[0];
-  // const wOpiumBalances = chunks[1];
+  const fxsBalances = chunks[0];
+  const farmUniFraxFxsBalances = chunks[1];
   // const lp1inchOpiumEthBalances = chunks[2];
   // const farmingLp1inchOpiumEthBalances = chunks[3];
 
@@ -105,9 +109,9 @@ export async function strategy(
   //       parseFloat(
   //         formatUnits(
   //           // OPIUM
-  //           opiumBalances[i][0]
+  //           fxsBalances[i][0]
   //             // wOPIUM
-  //             .add(wOpiumBalances[i][0])
+  //             .add(farmUniFraxFxsBalances[i][0])
   //             // LP 1inch OPIUM-ETH + farming
   //             .add(
   //               opiumLp1inchOpiumEth[0]
@@ -131,7 +135,11 @@ export async function strategy(
         addresses[i],
         parseFloat(
           formatUnits(
-            opiumBalances[i][0].toString(),
+            fxsBalances[i][0]
+            .add(farmUniFraxFxsBalances[i][0])
+            
+            
+            .toString(),
             DECIMALS
           )
         )
