@@ -11,15 +11,13 @@
                 "SUSHI_LP_FRAX_FXS": "0xc218001e3D102e3d1De9bf2c0F7D9626d76C6f30",
                 "FARMING_SUSHI_LP_FRAX_FXS": "0x35302f77E5Bd7A93cbec05d585e414e14B2A84a8",
                 "SUSHI_LP_FXS_WETH": "0x61eB53ee427aB4E007d78A9134AaCb3101A2DC23",
-                "FARMING_SUSHI_LP_FXS_WETH": "0x74C370990C1181303D20e9f0252437a97518B95B",
+                "FARMING_SUSHI_LP_FXS_WETH": "0x74C370990C1181303D20e9f0252437a97518B95B"
             }
         },
         "network": "1",
         "addresses": [
             "0x36A87d1E3200225f881488E4AEedF25303FebcAe",
-            "0x8a97a178408d7027355a7ef144fdf13277cea776",
-            "0xfdde7ad56320b9cc691ad319a8fec2c8d6b993e6",
-            "0x6ef7e40b1a35fc336cdf54141e0f11ae004337c0"
+            "0x8a97a178408d7027355a7ef144fdf13277cea776"
         ],
         "snapshot": 11817421
     }
