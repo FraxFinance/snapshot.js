@@ -121,6 +121,21 @@ export async function strategy(
     [address]
   ]);
 
+  // Fetch FREE_SUSHI_LP_FRAX_FXS Balance
+  const freeSushiLPFraxFxsQuery = addresses.map((address: any) => [
+    options.SUSHI_LP_FRAX_FXS,
+    'balanceOf',
+    [address]
+  ]);
+
+  // Fetch FARMING_SUSHI_LP_FRAX_FXS Balance
+  const farmingSushiLPFraxFxsQuery = addresses.map((address: any) => [
+    options.FARMING_SUSHI_LP_FRAX_FXS,
+    'balanceOf',
+    [address]
+  ]);
+
+
   const response = await multicall(
     network,
     provider,
@@ -131,10 +146,14 @@ export async function strategy(
       [options.UNI_LP_FRAX_FXS, 'token0'],
       [options.UNI_LP_FRAX_FXS, 'getReserves'],
       [options.UNI_LP_FRAX_FXS, 'totalSupply'],
+      [options.SUSHI_LP_FRAX_FXS, 'token0'],
+      [options.SUSHI_LP_FRAX_FXS, 'getReserves'],
+      [options.SUSHI_LP_FRAX_FXS, 'totalSupply'],
       ...fxsQuery,
       ...freeUniLPFraxFxsQuery,
       ...farmingUniLPFraxFxsQuery,
-
+      ...freeSushiLPFraxFxsQuery,
+      ...farmingSushiLPFraxFxsQuery,
     ],
     { blockTag }
   );
@@ -144,24 +163,42 @@ export async function strategy(
   const uniLPFraxFxs_getReserves = response[1];
   const uniLPFraxFxs_totalSupply = response[2];
 
-  console.log("uniLPFraxFxs_token0: ", uniLPFraxFxs_token0[0]);
-  console.log("uniLPFraxFxs_getReserves[0]: ", uniLPFraxFxs_getReserves[0]);
-  console.log("uniLPFraxFxs_getReserves[1]: ", uniLPFraxFxs_getReserves[1]);
-  console.log("uniLPFraxFxs_totalSupply: ", uniLPFraxFxs_totalSupply[0]);
+  const sushiLPFraxFxs_token0 = response[3];
+  const sushiLPFraxFxs_getReserves = response[4];
+  const sushiLPFraxFxs_totalSupply = response[5];
 
+  // console.log("uniLPFraxFxs_token0: ", uniLPFraxFxs_token0[0]);
+  // console.log("uniLPFraxFxs_getReserves[0]: ", uniLPFraxFxs_getReserves[0]);
+  // console.log("uniLPFraxFxs_getReserves[1]: ", uniLPFraxFxs_getReserves[1]);
+  // console.log("uniLPFraxFxs_totalSupply: ", uniLPFraxFxs_totalSupply[0]);
+
+  // Uniswap FRAX/FXS
+  // ----------------------------------------
   let uniLPFraxFxs_fxs_per_LP_E18;
-  if (uniLPFraxFxs_token0[0] == options.FXS) {
-    const uni_FraxFxs_totalSupply_E0 = uniLPFraxFxs_totalSupply[0];
-    const uni_FraxFxs_reserves0_E0 = uniLPFraxFxs_getReserves[0];
-    uniLPFraxFxs_fxs_per_LP_E18 = uni_FraxFxs_reserves0_E0.mul(BIG18).div(uni_FraxFxs_totalSupply_E0);
-  }
+  let uni_FraxFxs_reservesFXS_E0;
+  if (uniLPFraxFxs_token0[0] == options.FXS) uni_FraxFxs_reservesFXS_E0 = uniLPFraxFxs_getReserves[0];
+  else uni_FraxFxs_reservesFXS_E0 = uniLPFraxFxs_getReserves[1]
+  const uni_FraxFxs_totalSupply_E0 = uniLPFraxFxs_totalSupply[0];
+  uniLPFraxFxs_fxs_per_LP_E18 = uni_FraxFxs_reservesFXS_E0.mul(BIG18).div(uni_FraxFxs_totalSupply_E0);
 
-  const responseClean = response.slice(3, response.length);
+  // SushiSwap FRAX/FXS
+  // ----------------------------------------
+  let sushiLPFraxFxs_fxs_per_LP_E18;
+  let sushi_FraxFxs_reservesFXS_E0;
+  if (sushiLPFraxFxs_token0[0] == options.FXS) sushi_FraxFxs_reservesFXS_E0 = sushiLPFraxFxs_getReserves[0];
+  else sushi_FraxFxs_reservesFXS_E0 = sushiLPFraxFxs_getReserves[1]
+  const sushi_FraxFxs_totalSupply_E0 = sushiLPFraxFxs_totalSupply[0];
+  sushiLPFraxFxs_fxs_per_LP_E18 = sushi_FraxFxs_reservesFXS_E0.mul(BIG18).div(sushi_FraxFxs_totalSupply_E0);
+ 
+
+  const responseClean = response.slice(6, response.length);
 
   const chunks = chunk(responseClean, addresses.length);
   const fxsBalances = chunks[0];
   const freeUniFraxFxsBalances = chunks[1];
   const farmUniFraxFxsBalances = chunks[2];
+  const freeSushiFraxFxsBalances = chunks[3];
+  const farmSushiFraxFxsBalances = chunks[4];
   // const lp1inchOpiumEthBalances = chunks[2];
   // const farmingLp1inchOpiumEthBalances = chunks[3];
 
@@ -202,7 +239,8 @@ export async function strategy(
             fxsBalances[i][0]
             .add((freeUniFraxFxsBalances[i][0]).mul(uniLPFraxFxs_fxs_per_LP_E18).div(BIG18)) // FXS share in the free Uni FRAX/FXS LP
             .add((farmUniFraxFxsBalances[i][0]).mul(uniLPFraxFxs_fxs_per_LP_E18).div(BIG18)) // FXS share in the staked Uni FRAX/FXS LP
-            
+            .add((freeSushiFraxFxsBalances[i][0]).mul(sushiLPFraxFxs_fxs_per_LP_E18).div(BIG18)) // FXS share in the free Sushi FRAX/FXS LP
+            .add((farmSushiFraxFxsBalances[i][0]).mul(sushiLPFraxFxs_fxs_per_LP_E18).div(BIG18)) // FXS share in the staked Sushi FRAX/FXS LP
             
             .toString(),
             DECIMALS
