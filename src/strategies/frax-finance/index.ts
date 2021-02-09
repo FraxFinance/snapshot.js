@@ -261,19 +261,19 @@ export async function strategy(
         const free_sushi_fxs_weth = freeSushiFxsWethBalances[i][0];
         const farm_sushi_fxs_weth = farmSushiFxsWethBalances[i][0];
 
-        console.log(`==================${addresses[i]}==================`);
-        console.log("Free FXS: ", free_fxs.div(BIG18).toString());
-        console.log("Free Uni FRAX/FXS LP: ", free_uni_frax_fxs.div(BIG18).toString());
-        console.log("Farmed Uni FRAX/FXS LP [boosted]: ", farm_uni_frax_fxs.div(BIG18).toString());
-        console.log("Free Sushi FRAX/FXS LP: ", free_sushi_frax_fxs.div(BIG18).toString());
-        console.log("Farmed Sushi FRAX/FXS LP [boosted]: ", farm_sushi_frax_fxs.div(BIG18).toString());
-        console.log("Free Sushi FXS/WETH: ", free_sushi_fxs_weth.div(BIG18).toString());
-        console.log("Farmed Sushi FXS/WETH [boosted]: ", farm_sushi_fxs_weth.div(BIG18).toString());
-        console.log("------");
-        console.log("FXS per Uni FRAX/FXS LP: ", uniLPFraxFxs_fxs_per_LP_E18.toString());
-        console.log("FXS per Sushi FRAX/FXS LP: ", sushiLPFraxFxs_fxs_per_LP_E18.toString());
-        console.log("FXS per Sushi FXS/WETH LP: ", sushiLPFxsWeth_fxs_per_LP_E18.toString());
-        console.log(``);
+        // console.log(`==================${addresses[i]}==================`);
+        // console.log("Free FXS: ", free_fxs.div(BIG18).toString());
+        // console.log("Free Uni FRAX/FXS LP: ", free_uni_frax_fxs.div(BIG18).toString());
+        // console.log("Farmed Uni FRAX/FXS LP [boosted]: ", farm_uni_frax_fxs.div(BIG18).toString());
+        // console.log("Free Sushi FRAX/FXS LP: ", free_sushi_frax_fxs.div(BIG18).toString());
+        // console.log("Farmed Sushi FRAX/FXS LP [boosted]: ", farm_sushi_frax_fxs.div(BIG18).toString());
+        // console.log("Free Sushi FXS/WETH: ", free_sushi_fxs_weth.div(BIG18).toString());
+        // console.log("Farmed Sushi FXS/WETH [boosted]: ", farm_sushi_fxs_weth.div(BIG18).toString());
+        // console.log("------");
+        // console.log("FXS per Uni FRAX/FXS LP: ", uniLPFraxFxs_fxs_per_LP_E18.toString());
+        // console.log("FXS per Sushi FRAX/FXS LP: ", sushiLPFraxFxs_fxs_per_LP_E18.toString());
+        // console.log("FXS per Sushi FXS/WETH LP: ", sushiLPFxsWeth_fxs_per_LP_E18.toString());
+        // console.log(``);
 
         return [
           addresses[i],
@@ -281,11 +281,11 @@ export async function strategy(
             formatUnits(
               free_fxs
               .add((free_uni_frax_fxs).mul(uniLPFraxFxs_fxs_per_LP_E18).div(BIG18)) // FXS share in free Uni FRAX/FXS LP
-              .add((farm_uni_frax_fxs).mul(uniLPFraxFxs_fxs_per_LP_E18).div(BIG18)) // FXS share in farmed Uni FRAX/FXS LP
+              .add((farm_uni_frax_fxs).mul(uniLPFraxFxs_fxs_per_LP_E18).div(BIG18)) // FXS share in farmed Uni FRAX/FXS LP [boosted]
               .add((free_sushi_frax_fxs).mul(sushiLPFraxFxs_fxs_per_LP_E18).div(BIG18)) // FXS share in free Sushi FRAX/FXS LP
-              .add((farm_sushi_frax_fxs).mul(sushiLPFraxFxs_fxs_per_LP_E18).div(BIG18)) // FXS share in farmed Sushi FRAX/FXS LP
+              .add((farm_sushi_frax_fxs).mul(sushiLPFraxFxs_fxs_per_LP_E18).div(BIG18)) // FXS share in farmed Sushi FRAX/FXS LP [boosted]
               .add((free_sushi_fxs_weth).mul(sushiLPFxsWeth_fxs_per_LP_E18).div(BIG18)) // FXS share in free Sushi FXS/WETH LP
-              .add((farm_sushi_fxs_weth).mul(sushiLPFxsWeth_fxs_per_LP_E18).div(BIG18)) // FXS share in farmed Sushi FXS/WETH LP
+              .add((farm_sushi_fxs_weth).mul(sushiLPFxsWeth_fxs_per_LP_E18).div(BIG18)) // FXS share in farmed Sushi FXS/WETH LP [boosted]
               
               .toString(),
               DECIMALS
