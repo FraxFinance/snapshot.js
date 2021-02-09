@@ -38,6 +38,25 @@ const abi = [
     type: 'function'
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "boostedBalanceOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     constant: true,
     inputs: [],
     name: 'totalSupply',
@@ -117,7 +136,7 @@ export async function strategy(
   // Fetch FARMING_UNI_LP_FRAX_FXS Balance
   const farmingUniLPFraxFxsQuery = addresses.map((address: any) => [
     options.FARMING_UNI_LP_FRAX_FXS,
-    'balanceOf',
+    'boostedBalanceOf',
     [address]
   ]);
 
@@ -131,7 +150,7 @@ export async function strategy(
   // Fetch FARMING_SUSHI_LP_FRAX_FXS Balance
   const farmingSushiLPFraxFxsQuery = addresses.map((address: any) => [
     options.FARMING_SUSHI_LP_FRAX_FXS,
-    'balanceOf',
+    'boostedBalanceOf',
     [address]
   ]);
 
@@ -145,7 +164,7 @@ export async function strategy(
   // Fetch FARMING_SUSHI_LP_FXS_WETH Balance
   const farmingSushiLPFxsWethQuery = addresses.map((address: any) => [
     options.FARMING_SUSHI_LP_FXS_WETH,
-    'balanceOf',
+    'boostedBalanceOf',
     [address]
   ]);
 
@@ -242,19 +261,19 @@ export async function strategy(
         const free_sushi_fxs_weth = freeSushiFxsWethBalances[i][0];
         const farm_sushi_fxs_weth = farmSushiFxsWethBalances[i][0];
 
-        // console.log(`==================${addresses[i]}==================`);
-        // console.log("Free FXS: ", free_fxs.div(BIG18).toString());
-        // console.log("Free Uni FRAX/FXS LP: ", free_uni_frax_fxs.div(BIG18).toString());
-        // console.log("Farmed Uni FRAX/FXS LP: ", farm_uni_frax_fxs.div(BIG18).toString());
-        // console.log("Free Sushi FRAX/FXS LP: ", free_sushi_frax_fxs.div(BIG18).toString());
-        // console.log("Farmed Sushi FRAX/FXS LP: ", farm_sushi_frax_fxs.div(BIG18).toString());
-        // console.log("Free Sushi FXS/WETH: ", free_sushi_fxs_weth.div(BIG18).toString());
-        // console.log("Farmed Sushi FXS/WETH: ", farm_sushi_fxs_weth.div(BIG18).toString());
-        // console.log("------");
-        // console.log("FXS per Uni FRAX/FXS LP: ", uniLPFraxFxs_fxs_per_LP_E18.toString());
-        // console.log("FXS per Sushi FRAX/FXS LP: ", sushiLPFraxFxs_fxs_per_LP_E18.toString());
-        // console.log("FXS per Sushi FXS/WETH LP: ", sushiLPFxsWeth_fxs_per_LP_E18.toString());
-        // console.log(``);
+        console.log(`==================${addresses[i]}==================`);
+        console.log("Free FXS: ", free_fxs.div(BIG18).toString());
+        console.log("Free Uni FRAX/FXS LP: ", free_uni_frax_fxs.div(BIG18).toString());
+        console.log("Farmed Uni FRAX/FXS LP [boosted]: ", farm_uni_frax_fxs.div(BIG18).toString());
+        console.log("Free Sushi FRAX/FXS LP: ", free_sushi_frax_fxs.div(BIG18).toString());
+        console.log("Farmed Sushi FRAX/FXS LP [boosted]: ", farm_sushi_frax_fxs.div(BIG18).toString());
+        console.log("Free Sushi FXS/WETH: ", free_sushi_fxs_weth.div(BIG18).toString());
+        console.log("Farmed Sushi FXS/WETH [boosted]: ", farm_sushi_fxs_weth.div(BIG18).toString());
+        console.log("------");
+        console.log("FXS per Uni FRAX/FXS LP: ", uniLPFraxFxs_fxs_per_LP_E18.toString());
+        console.log("FXS per Sushi FRAX/FXS LP: ", sushiLPFraxFxs_fxs_per_LP_E18.toString());
+        console.log("FXS per Sushi FXS/WETH LP: ", sushiLPFxsWeth_fxs_per_LP_E18.toString());
+        console.log(``);
 
         return [
           addresses[i],
